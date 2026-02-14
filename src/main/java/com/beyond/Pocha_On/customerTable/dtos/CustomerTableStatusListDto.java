@@ -1,0 +1,93 @@
+package com.beyond.Pocha_On.customerTable.dtos;
+
+import com.beyond.Pocha_On.customerTable.domain.CustomerTable;
+import com.beyond.Pocha_On.customerTable.domain.TableStatus;
+import com.beyond.Pocha_On.ordering.domain.OrderStatus;
+import com.beyond.Pocha_On.ordering.domain.Ordering;
+import com.beyond.Pocha_On.ordering.domain.OrderingDetail;
+import com.beyond.Pocha_On.ordering.domain.OrderingDetailOption;
+import com.beyond.Pocha_On.pay.domain.PaymentState;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
+
+@Builder
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class                                                                                                                                                                                                                                                                CustomerTableStatusListDto {
+    private Long customerTableId;
+    private Long tableNum;
+    private TableStatus tableStatus;
+    private LocalDateTime groupCreateAt;
+    private List<OrderingList> orderingList;
+
+    public static CustomerTableStatusListDto fromEntity(CustomerTable customerTable, List<Ordering> orderingList) {
+        List<OrderingList> orderingLists = orderingList.stream()
+                .map(OrderingList::fromEntity)
+                .toList();
+
+        return CustomerTableStatusListDto.builder()
+                .customerTableId(customerTable.getCustomerTableId())
+                .tableNum(customerTable.getTableNum())
+                .tableStatus(customerTable.getTableStatus())
+                .groupCreateAt(customerTable.getCreateTimeAt())
+                .orderingList(orderingLists)
+                .build();
+    }
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
+    public static class OrderingList {
+        private Long orderingId;
+        private Long totalPrice;
+        private OrderStatus orderStatus;
+        private PaymentState paymentState;
+        private List<OrderingOption> orderingOptionList;
+
+        public static OrderingList fromEntity(Ordering ordering) {
+            List<OrderingOption> options = ordering.getOrderDetail().stream()
+                    .map(OrderingOption::fromEntity)
+                    .toList();
+
+            return OrderingList.builder()
+                    .orderingId(ordering.getId())
+                    .totalPrice(ordering.getTotalPrice())
+                    .orderStatus(ordering.getOrderStatus())
+                    .paymentState(ordering.getPaymentState())
+                    .orderingOptionList(options)
+                    .build();
+        }
+    }
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
+    public static class OrderingOption {
+        private String menuName;
+        private Long quantity;
+        private List<String> options;
+
+        public static OrderingOption fromEntity(OrderingDetail detail) {
+            List<String> optionNames = detail.getOrderingDetailOptions().stream()
+                    .map(OrderingDetailOption::getOrderingOptionName)
+                    .toList();
+
+            return OrderingOption.builder()
+                    .menuName(detail.getMenu().getMenuName())
+                    .quantity((long) detail.getOrderingDetailQuantity())
+                    .options(optionNames)
+                    .build();
+
+
+        }
+    }
+}

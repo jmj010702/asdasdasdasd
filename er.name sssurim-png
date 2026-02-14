@@ -1,0 +1,16 @@
+core.repositoryformatversion=0
+core.filemode=false
+core.bare=false
+core.logallrefupdates=true
+core.symlinks=false
+core.ignorecase=true
+remote.origin.url=https://github.com/beyond-sw-camp/be23-2nd-team2-MJ_Order-be.git
+remote.origin.fetch=+refs/heads/*:refs/remotes/origin/*
+branch.main.remote=origin
+branch.main.merge=refs/heads/main
+branch.feature-branch/main.remote=origin
+branch.feature-branch/main.merge=refs/heads/feature-branch/main
+branch.feature-branch/surim.remote=origin
+branch.feature-branch/surim.merge=refs/heads/feature-branch/surim
+user.name=sssurim-png
+user.email=sssurim-png@users.noreply.github.com
